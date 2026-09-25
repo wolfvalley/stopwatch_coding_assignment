@@ -17,21 +17,29 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final Stopwatch _stopwatch = Stopwatch();
 
+  final ValueNotifier<Duration> _elapsed = ValueNotifier(Duration.zero);
+
   Timer? _timer;
   StopwatchStatus _status = StopwatchStatus.initial;
 
-  /// only starts the stopwatch it is set to zero
-  void _start() {
-    if (_status == StopwatchStatus.running) return;
-
+  /// sets the stopwatch to running state
+  void _run(){
     _stopwatch.start();
-    _status = StopwatchStatus.running;
-
     _startTimer();
 
+    setState(() {
+      _status = StopwatchStatus.running;
+    });
   }
 
-  /// pause the stopwatch, when it is running
+  /// only starts the stopwatch, if it is set to zero
+  void _start() {
+    if (_status != StopwatchStatus.initial) return;
+
+    _run();
+  }
+
+  /// pauses the stopwatch, when it is running
   void _pause() {
     if (_status != StopwatchStatus.running) return;
 
@@ -48,10 +56,10 @@ class _HomeScreenState extends State<HomeScreen> {
   void _resume() {
     if (_status != StopwatchStatus.paused) return;
 
-    _start();
+    _run();
   }
 
-  /// reset the value of the stopwatch to zero
+  /// resets the value of the stopwatch to zero
   void _reset() {
     _stopwatch
         ..stop()
@@ -60,25 +68,26 @@ class _HomeScreenState extends State<HomeScreen> {
     _timer?.cancel();
     _timer = null;
 
+    _elapsed.value = Duration.zero;
+
     setState(() {
       _status = StopwatchStatus.initial;
     });
   }
 
+  /// starts the timer
   void _startTimer() {
     _timer?.cancel();
 
     _timer = Timer.periodic(
-      const Duration(milliseconds: 100),
+      const Duration(milliseconds: 1),
           (_) {
-        if (mounted) {
-          setState(() {});
-        }
-      },
+            _elapsed.value = _stopwatch.elapsed;
+          },
     );
   }
 
-  /// conditioning the functionality of PUASE/RESUME button
+  /// conditions the functionality of PAUSE/RESUME button
   void _togglePause() {
     switch (_status) {
       case StopwatchStatus.initial:
@@ -92,9 +101,8 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  /// formatting the ellapsed time to min:sec:ms format
-  String get _formattedElapsed {
-    final elapsed = _stopwatch.elapsed;
+  /// formats the elapsed time to mm:ss.SSS (00:00.000) format
+  String _formattedDuration(Duration elapsed) {
 
     final minutes = elapsed.inMinutes
         .remainder(60)
@@ -116,6 +124,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void dispose() {
     _timer?.cancel();
+    _elapsed.dispose();
     super.dispose();
   }
 
@@ -126,12 +135,17 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              _formattedElapsed,
-              style: const TextStyle(
-                fontSize: 28,
-                fontWeight: FontWeight.bold,
-              ),
+            ValueListenableBuilder<Duration>(
+              valueListenable: _elapsed,
+              builder: (context, elapsed, child) {
+                return Text(
+                  _formattedDuration(elapsed),
+                  style: const TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                  ),
+                );
+              }
             ),
 
             const SizedBox(height: 50),
