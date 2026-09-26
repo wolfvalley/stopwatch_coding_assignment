@@ -48,6 +48,7 @@ class _HomeScreenState extends State<HomeScreen> {
               valueListenable: _controller.elapsed,
               builder: (context, elapsed, child) {
                 return Text(
+                  key: const Key('elapsedTime'),
                   _formattedDuration(elapsed),
                   style: const TextStyle(
                     fontSize: 28,
