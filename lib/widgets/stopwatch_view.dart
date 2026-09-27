@@ -104,11 +104,10 @@ class _StopwatchBody extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                _ControlLabels(
+
+                _LapButton(
                   controller: controller,
                 ),
-
-                const SizedBox(height: 55),
 
                 StopwatchDisplay(
                   elapsed: controller.elapsed,
@@ -145,8 +144,8 @@ class _StopwatchBody extends StatelessWidget {
   }
 }
 
-class _ControlLabels extends StatelessWidget {
-  const _ControlLabels({
+class _LapButton extends StatelessWidget {
+  const _LapButton({
     required this.controller,
   });
 
@@ -157,50 +156,34 @@ class _ControlLabels extends StatelessWidget {
     return ListenableBuilder(
       listenable: controller,
       builder: (context, _) {
-        return Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Transform.rotate(
-              angle: -0.45,
+        return Padding(
+          padding: const EdgeInsets.all(8),
+          child: SizedBox(
+            width: 65,
+            height: 45,
+            child: ElevatedButton(
+              key: const Key('lapButton'),
+              onPressed: controller.isRunning
+                  ? controller.addLap
+                  : null,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.amber.shade700,
+                disabledBackgroundColor: Colors.white12,
+                padding: EdgeInsets.zero,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
               child: const Text(
-                'RESET',
+                'LAP',
                 style: TextStyle(
-                  color: Colors.lightBlueAccent,
-                  fontSize: 11,
+                  fontSize: 12,
                   fontWeight: FontWeight.w700,
-                  letterSpacing: 1.2,
+                  color: Colors.white,
                 ),
               ),
             ),
-
-            Transform.translate(
-              offset: const Offset(0, -20),
-              child: Text(
-                controller.isPaused
-                    ? 'RESUME'
-                    : 'PAUSE',
-                style: const TextStyle(
-                  color: Colors.redAccent,
-                  fontSize: 11,
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: 1.2,
-                ),
-              ),
-            ),
-
-            Transform.rotate(
-              angle: 0.45,
-              child: const Text(
-                'START',
-                style: TextStyle(
-                  color: Colors.lightGreen,
-                  fontSize: 11,
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: 1.2,
-                ),
-              ),
-            ),
-          ],
+          ),
         );
       },
     );

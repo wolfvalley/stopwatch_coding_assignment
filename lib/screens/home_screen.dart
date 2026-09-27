@@ -1,20 +1,32 @@
 import 'package:flutter/material.dart';
-import 'package:stopwatch_coding_assignment/controllers/stopwatch_controller.dart';
-import 'package:stopwatch_coding_assignment/widgets/stopwatch_view.dart';
+import '../controllers/stopwatch_controller.dart';
+import '../widgets/laps_display.dart';
+import '../widgets/stopwatch_view.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  const HomeScreen({
+    super.key,
+  });
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<HomeScreen> createState() =>
+      _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final StopwatchController _controller = StopwatchController();
+  late final StopwatchController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _controller = StopwatchController();
+  }
 
   @override
   void dispose() {
     _controller.dispose();
+
     super.dispose();
   }
 
@@ -23,13 +35,26 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(25.0),
-            child: StopwatchView(
+        child: Stack(
+          children: [
+            Align(
+              alignment: Alignment.center,
+              child: Padding(
+                padding: const EdgeInsets.only(
+                  top: 0,
+                  left: 16,
+                  right: 16,
+                ),
+                child: StopwatchView(
+                  controller: _controller,
+                ),
+              ),
+            ),
+
+            LapDisplay(
               controller: _controller,
             ),
-          ),
+          ],
         ),
       ),
     );

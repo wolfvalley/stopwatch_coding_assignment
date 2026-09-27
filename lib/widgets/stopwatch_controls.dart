@@ -20,6 +20,8 @@ class StopwatchControls extends StatelessWidget {
             Transform.rotate(
               angle: -0.55,
               child: _StopwatchButton(
+                label: "RESET",
+                labelColor: Colors.lightBlueAccent,
                 buttonKey: const Key('resetButton'),
                 onPressed: controller.reset,
               ),
@@ -27,6 +29,8 @@ class StopwatchControls extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(bottom: 60.0),
               child: _StopwatchButton(
+                label: controller.isPaused ? 'RESUME' : 'PAUSE',
+                labelColor: controller.isPaused ? Colors.greenAccent : Colors.redAccent,
                 buttonKey: const Key('pauseResumeButton'),
                 onPressed: controller.isInitial
                     ? null
@@ -36,6 +40,8 @@ class StopwatchControls extends StatelessWidget {
             Transform.rotate(
               angle: 0.55,
               child: _StopwatchButton(
+                label: "START",
+                labelColor: Colors.lightGreen,
                 buttonKey: const Key('startButton'),
                 onPressed: controller.isInitial
                     ? controller.start
@@ -51,10 +57,14 @@ class StopwatchControls extends StatelessWidget {
 
 class _StopwatchButton extends StatelessWidget {
   const _StopwatchButton({
+    required this. label,
+    required this. labelColor,
     required this.onPressed,
     required this.buttonKey,
   });
 
+  final String label;
+  final Color labelColor;
   final VoidCallback? onPressed;
   final Key buttonKey;
 
@@ -92,6 +102,17 @@ class _StopwatchButton extends StatelessWidget {
           key: buttonKey,
           onTap: onPressed,
           borderRadius: BorderRadius.circular(10),
+          child: Center(
+            child: Text(
+              label,
+              style: TextStyle(
+                color: onPressed != null ? labelColor : Colors.white70,
+                fontSize: 11,
+                fontWeight: FontWeight.w700,
+                letterSpacing: 1.2,
+              ),
+            ),
+          ),
         ),
       ),
     );

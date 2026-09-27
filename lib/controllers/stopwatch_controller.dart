@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
+import 'package:stopwatch_coding_assignment/models/lap.dart';
 
 enum StopwatchStatus {
   initial,
@@ -16,18 +17,21 @@ class StopwatchController extends ChangeNotifier {
   Timer? _timer;
   StopwatchStatus _status = StopwatchStatus.initial;
 
+  final List<Lap> _laps = [];
+
   StopwatchStatus get status => _status;
 
   bool get isInitial => _status == StopwatchStatus.initial;
   bool get isRunning => _status == StopwatchStatus.running;
   bool get isPaused => _status == StopwatchStatus.paused;
 
+  List<Lap> get laps => List.unmodifiable(_laps);
+
   /// only starts the stopwatch, if it is set to zero
   void start() {
     if (_status != StopwatchStatus.initial) return;
 
-    debugPrint('toggleStart: $_status');
-
+    _laps.clear();
     _run();
   }
 
@@ -68,7 +72,6 @@ class StopwatchController extends ChangeNotifier {
 
   /// conditions the functionality of PAUSE/RESUME button
   void togglePause() {
-    debugPrint('togglePause: $_status');
     switch (_status) {
       case StopwatchStatus.initial:
         return;
@@ -91,12 +94,32 @@ class StopwatchController extends ChangeNotifier {
     _timer?.cancel();
 
     _timer = Timer.periodic(
-      const Duration(milliseconds: 1),
+      const Duration(milliseconds: 10),
           (_) {
         elapsed.value = _stopwatch.elapsed;
       },
     );
 
+    notifyListeners();
+  }
+
+  void addLap(){
+    if(!isRunning) return;
+
+    Lap newLap = Lap(
+        number: _laps.length+1,
+        lapTime: _laps.isNotEmpty ? elapsed.value-_laps.first.splitTime : elapsed.value,
+        splitTime: elapsed.value
+    );
+    _laps.insert(0, newLap);
+
+    notifyListeners();
+  }
+
+  void clearLaps(){
+    if (_laps.isEmpty) return;
+
+    _laps.clear();
     notifyListeners();
   }
 

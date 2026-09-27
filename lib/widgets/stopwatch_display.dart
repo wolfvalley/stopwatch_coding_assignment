@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:stopwatch_coding_assignment/utils/duration_formatter.dart';
 
 class StopwatchDisplay extends StatelessWidget {
   const StopwatchDisplay({
@@ -44,7 +45,7 @@ class StopwatchDisplay extends StatelessWidget {
             return FittedBox(
               fit: BoxFit.scaleDown,
               child: Text(
-                _formatDuration(value),
+                formatDuration(value),
                 key: const Key('elapsedTime'),
                 style: const TextStyle(
                   fontFamily: 'monospace',
@@ -61,22 +62,4 @@ class StopwatchDisplay extends StatelessWidget {
     );
   }
 
-  String _formatDuration(Duration duration) {
-    final minutes = duration.inMinutes
-        .remainder(60)
-        .toString()
-        .padLeft(2, '0');
-
-    final seconds = duration.inSeconds
-        .remainder(60)
-        .toString()
-        .padLeft(2, '0');
-
-    final milliseconds = duration.inMilliseconds
-        .remainder(1000)
-        .toString()
-        .padLeft(3, '0');
-
-    return '$minutes:$seconds.$milliseconds';
-  }
 }
