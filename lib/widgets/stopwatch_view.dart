@@ -1,0 +1,208 @@
+import 'package:flutter/material.dart';
+import 'package:stopwatch_coding_assignment/widgets/stopwatch_controls.dart';
+import 'package:stopwatch_coding_assignment/widgets/stopwatch_display.dart';
+import '../controllers/stopwatch_controller.dart';
+
+
+class StopwatchView extends StatelessWidget {
+  const StopwatchView({
+    required this.controller,
+    super.key,
+  });
+
+  final StopwatchController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return ConstrainedBox(
+      constraints: const BoxConstraints(
+        maxWidth: 400,
+      ),
+      child: AspectRatio(
+        aspectRatio: 0.8,
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            Positioned.fill(
+              top: 25,
+              child: _StopwatchBody(
+                controller: controller,
+              ),
+            ),
+
+            Positioned(
+              top: 0,
+              left: 25,
+              right: 25,
+              child: StopwatchControls(
+                controller: controller,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _StopwatchBody extends StatelessWidget {
+  const _StopwatchBody({
+    required this.controller,
+  });
+
+  final StopwatchController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return AspectRatio(
+      aspectRatio: 1,
+      child: Container(
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          gradient: const RadialGradient(
+            colors: [
+              Colors.black12,
+              Colors.black87,
+            ],
+          ),
+
+          border: Border.all(
+            color: Colors.white24,
+            width: 6,
+          ),
+
+          boxShadow: const [
+            BoxShadow(
+              color: Colors.black54,
+              blurRadius: 25,
+              spreadRadius: 2,
+              offset: Offset(0, 12),
+            ),
+          ],
+        ),
+        padding: const EdgeInsets.all(14),
+        child: Container(
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: Colors.white12,
+            border: Border.all(
+              color: Colors.black38,
+              width: 5,
+            ),
+            boxShadow: const [
+              BoxShadow(
+                color: Colors.black87,
+                blurRadius: 8,
+                offset: Offset(0, 3),
+              ),
+            ],
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 32,
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                _ControlLabels(
+                  controller: controller,
+                ),
+
+                const SizedBox(height: 55),
+
+                StopwatchDisplay(
+                  elapsed: controller.elapsed,
+                ),
+
+                const SizedBox(height: 25),
+
+                const Text(
+                  'STOPWATCH',
+                  style: TextStyle(
+                    color: Colors.white38,
+                    fontSize: 11,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 4,
+                  ),
+                ),
+
+                const SizedBox(height: 5),
+
+                Container(
+                  width: 30,
+                  height: 2,
+                  decoration: BoxDecoration(
+                    color: Colors.white24,
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _ControlLabels extends StatelessWidget {
+  const _ControlLabels({
+    required this.controller,
+  });
+
+  final StopwatchController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListenableBuilder(
+      listenable: controller,
+      builder: (context, _) {
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Transform.rotate(
+              angle: -0.45,
+              child: const Text(
+                'RESET',
+                style: TextStyle(
+                  color: Colors.lightBlueAccent,
+                  fontSize: 11,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: 1.2,
+                ),
+              ),
+            ),
+
+            Transform.translate(
+              offset: const Offset(0, -20),
+              child: Text(
+                controller.isPaused
+                    ? 'RESUME'
+                    : 'PAUSE',
+                style: const TextStyle(
+                  color: Colors.redAccent,
+                  fontSize: 11,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: 1.2,
+                ),
+              ),
+            ),
+
+            Transform.rotate(
+              angle: 0.45,
+              child: const Text(
+                'START',
+                style: TextStyle(
+                  color: Colors.lightGreen,
+                  fontSize: 11,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: 1.2,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+}

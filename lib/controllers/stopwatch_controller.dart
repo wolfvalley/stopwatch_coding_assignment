@@ -26,6 +26,8 @@ class StopwatchController extends ChangeNotifier {
   void start() {
     if (_status != StopwatchStatus.initial) return;
 
+    debugPrint('toggleStart: $_status');
+
     _run();
   }
 
@@ -66,15 +68,18 @@ class StopwatchController extends ChangeNotifier {
 
   /// conditions the functionality of PAUSE/RESUME button
   void togglePause() {
+    debugPrint('togglePause: $_status');
     switch (_status) {
       case StopwatchStatus.initial:
         return;
 
       case StopwatchStatus.running:
         pause();
+        break;
 
       case StopwatchStatus.paused:
         resume();
+        break;
     }
   }
 

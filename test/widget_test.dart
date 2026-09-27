@@ -107,38 +107,45 @@ void main() {
         )
       );
 
-      /// verify the stopwatch starts at zero after the render of HomeScreen
-      expect(find.text("00:00.000"), findsOneWidget);
+      final elapsedFinder = find.byKey(const Key('elapsedTime'));
+
+      final startButton = find.byKey(const Key('startButton'));
+
+      final pauseResumeButton = find.byKey(const Key('pauseResumeButton'));
+
+      final resetButton = find.byKey(const Key('resetButton'));
+
+      /// verify the stopwatch starts at zero
+      expect(tester.widget<Text>(elapsedFinder).data,'00:00.000',);
 
       /// Start the stopwatch and verify that the elapsed time begins to increase.
-      await tester.tap(find.text('START'));
+      await tester.tap(startButton);
 
-      await tester.pump( const Duration(milliseconds: 500));
+      await tester.pump(
+        const Duration(milliseconds: 500),
+      );
 
-      expect(find.text('00:00.000'), findsNothing);
+      expect(tester.widget<Text>(elapsedFinder).data,isNot('00:00.000'));
 
       /// Pause the stopwatch and verify that the UI switches
       /// from the PAUSE action to the RESUME action.
-      await tester.tap(find.text('PAUSE'));
+      await tester.tap(pauseResumeButton);
       await tester.pump();
 
-      expect(find.text("PAUSE"), findsNothing);
-      expect(find.text("RESUME"), findsOneWidget);
+      expect(find.text('PAUSE'), findsNothing);
+      expect(find.text('RESUME'), findsOneWidget);
 
-      final elapsedFinder = find.byKey(const Key('elapsedTime'));
-
-      final timeText = tester.widget<Text>(elapsedFinder).data;
+      final timeWhenPaused = tester.widget<Text>(elapsedFinder).data;
 
       /// Advance time and verify that the displayed elapsed time
       /// remains unchanged while the stopwatch is paused.
       await tester.pump(const Duration(milliseconds: 500));
 
-      expect(tester.widget<Text>(elapsedFinder).data, timeText);
-
+      expect(tester.widget<Text>(elapsedFinder).data,timeWhenPaused);
 
       /// Resume the stopwatch and verify that the UI switches
       /// back from RESUME to PAUSE and the time starts increasing again.
-      await tester.tap(find.text("RESUME"));
+      await tester.tap(pauseResumeButton);
       await tester.pump();
 
       expect(find.text("RESUME"), findsNothing);
@@ -152,15 +159,13 @@ void main() {
 
       /// Reset the stopwatch and verify that the displayed
       /// elapsed time returns to its initial value.
-      expect(find.text("00:00.000"), findsNothing);
-      await tester.tap(find.text("RESET"));
-
+      await tester.tap(resetButton);
       await tester.pump();
 
-      expect(find.text("00:00.000"), findsOneWidget);
-
+      expect(tester.widget<Text>(elapsedFinder).data,'00:00.000');
     });
-    testWidgets("edge cases", (WidgetTester tester) async{
+
+    testWidgets("edge test cases", (WidgetTester tester) async{
       await tester.pumpWidget(
           const MaterialApp(
             home: HomeScreen(),
@@ -169,38 +174,38 @@ void main() {
 
       final elapsedFinder = find.byKey(const Key('elapsedTime'));
 
+      final startFinder = find.byKey(const Key('startButton'));
+
+      final pauseResumeFinder = find.byKey(const Key('pauseResumeButton'));
+
+      final resetFinder = find.byKey(const Key('resetButton'));
+
       /// verify the PAUSE button is disabled before the stopwatch is started
-      final pauseButton = tester.widget<ElevatedButton>(find.widgetWithText(ElevatedButton, 'PAUSE'));
+      final pauseButton = tester.widget<InkWell>(pauseResumeFinder);
 
-      expect(pauseButton.onPressed, isNull);
-      expect(find.text("00:00.000"), findsOneWidget);
+      expect(pauseButton.onTap, isNull);
 
-      await tester.tap(find.text("START"));
+      expect(tester.widget<Text>(elapsedFinder).data,'00:00.000');
+
+      await tester.tap(startFinder);
+
       await tester.pump(const Duration(milliseconds: 500));
 
-      expect(find.text("00:00.000"), findsNothing);
+      expect(tester.widget<Text>(elapsedFinder).data,isNot('00:00.000'));
 
       /// Verify that START is disabled while the stopwatch is running.
-      final startButton = tester.widget<ElevatedButton>(
-        find.widgetWithText(ElevatedButton, 'START'),
-      );
+      final startButton = tester.widget<InkWell>(startFinder);
 
-      expect(startButton.onPressed, isNull);
+      expect(startButton.onTap, isNull);
 
       /// Verify that the stopwatch keeps running normally.
-      final timeBefore = tester.widget<Text>(
-        elapsedFinder,
-      ).data;
+      final timeBefore = tester.widget<Text>(elapsedFinder).data;
 
-      await tester.pump(
-        const Duration(milliseconds: 500),
-      );
+      await tester.pump(const Duration(milliseconds: 500));
 
-      final timeAfter = tester.widget<Text>(
-        elapsedFinder,
-      ).data;
+      final timeAfter = tester.widget<Text>(elapsedFinder).data;
 
-      expect(timeAfter, isNot(timeBefore));
+      expect(timeAfter,isNot(timeBefore));
 
       /// Verify that RESET restores the initial state
       /// when the stopwatch is paused.
@@ -209,27 +214,25 @@ void main() {
         const Duration(milliseconds: 500),
       );
 
-      await tester.tap(find.text('PAUSE'));
+      await tester.tap(pauseResumeFinder);
       await tester.pump();
 
-      expect(find.text('RESUME'), findsOneWidget);
-
-      await tester.tap(find.text('RESET'));
+      await tester.tap(resetFinder);
       await tester.pump();
 
-      expect(find.text('00:00.000'), findsOneWidget);
+      expect(tester.widget<Text>(elapsedFinder).data,'00:00.000');
+
       expect(find.text('PAUSE'), findsOneWidget);
 
-      final startButtonAfterReset = tester.widget<ElevatedButton>(
-        find.widgetWithText(ElevatedButton, 'START'),
-      );
+      /// Verify START is enabled again after reset.
+      final startButtonAfterReset = tester.widget<InkWell>(startFinder);
 
-      final pauseButtonAfterReset = tester.widget<ElevatedButton>(
-        find.widgetWithText(ElevatedButton, 'PAUSE'),
-      );
+      /// Verify PAUSE is disabled again after reset.
+      final pauseButtonAfterReset = tester.widget<InkWell>(pauseResumeFinder);
 
-      expect(startButtonAfterReset.onPressed, isNotNull);
-      expect(pauseButtonAfterReset.onPressed, isNull);
+      expect(startButtonAfterReset.onTap,isNotNull);
+
+      expect(pauseButtonAfterReset.onTap,isNull);
     });
   });
   }

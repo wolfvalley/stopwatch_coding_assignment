@@ -1,13 +1,15 @@
 # Stopwatch App Coding Assignment
 
-A simple stop watch Android application built with the Flutter framework as an assignment for my OTP job application.
+A simple stopwatch Android application built with the Flutter framework.
 
 ## Features
 
-- Simple and easy-to-use user interface
-- Android platform support
-- Responsive Flutter UI
-- Material Design component
+- Start, pause, resume, and reset functionality
+- Millisecond-precision elapsed time display
+- Custom stopwatch-inspired Material UI
+- Portrait-only orientation
+- Separation of UI and stopwatch logic
+- Widget tests covering the main interactions and edge cases
 
 ## Technologies
 
@@ -16,11 +18,11 @@ This project uses the following technologies:
 - Flutter
 - Dart
 - Android
-- material Design
+- Material Design
 
 ## Requirements
 
-To run run the project, you need:
+To run the project, you need:
 
 - Flutter SDK
 - Dart SDK
@@ -75,9 +77,27 @@ The main source code of the Flutter application is located in the `lib/` directo
 
 ```text
 lib/ 
- |-- main.dart - entry point of the application
- |-- screens/  - application screens
- `-- widgets/  - reusable UI components
+ |--controllers/ - stopwatch state and business logic
+ |-- widgets/    - reusable UI components
+ |-- screens/    - application screens
+ `-- main.dart   - entry point of the application
+```
+
+## Testing
+
+The project includes widget tests covering the main stopwatch functionality, including:
+
+- Start
+- Pause
+- Resume
+- Reset
+- Disabled button states
+- Stopwatch state transitions
+
+Run the tests with:
+
+```bash
+flutter test
 ```
 
 ## Android Build
