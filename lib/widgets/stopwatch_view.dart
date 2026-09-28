@@ -105,7 +105,7 @@ class _AnalogStopwatchLayout extends StatelessWidget {
                       letterColor: Colors.amber,
                       backgroundColor: Colors.transparent,
                       borderColor: Colors.amber,
-                      disabledColor: Colors.transparent,
+                      disabledColor: Colors.red.shade50,
                     ),
                   ),
                 ],
