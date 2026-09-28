@@ -19,12 +19,12 @@ class DisplayModeSwitch extends StatelessWidget {
         ButtonSegment(
           value: StopwatchDisplayMode.digital,
           label: Text('DIGITAL'),
-          icon: Icon(Icons.timer_outlined),
+          icon: Icon(Icons.watch_outlined),
         ),
         ButtonSegment(
           value: StopwatchDisplayMode.analog,
           label: Text('ANALOG'),
-          icon: Icon(Icons.watch_later_outlined),
+          icon: Icon(Icons.timer_outlined),
         ),
       ],
       selected: {mode},
