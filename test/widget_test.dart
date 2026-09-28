@@ -285,9 +285,7 @@ void main() {
   });
 
   group("Lap Widget Tests", () {
-    testWidgets(
-      "LAP button is disabled before the stopwatch is started",
-          (WidgetTester tester) async {
+    testWidgets("LAP button is disabled before the stopwatch is started", (WidgetTester tester) async {
         await tester.pumpWidget(
           const MaterialApp(
             home: HomeScreen(),
@@ -296,15 +294,14 @@ void main() {
 
         final lapFinder = find.byKey(const Key('lapButton'));
 
-        final lapButton = tester.widget<ElevatedButton>(lapFinder);
+        final lapButton = tester.widget<OutlinedButton>(lapFinder);
 
         expect(lapButton.onPressed, isNull);
       },
     );
 
     testWidgets(
-      "LAP button is enabled while the stopwatch is running",
-          (WidgetTester tester) async {
+      "LAP button is enabled while the stopwatch is running", (WidgetTester tester) async {
         await tester.pumpWidget(
           const MaterialApp(
             home: HomeScreen(),
@@ -318,15 +315,13 @@ void main() {
         await tester.tap(startFinder);
         await tester.pump();
 
-        final lapButton = tester.widget<ElevatedButton>(lapFinder);
+        final lapButton = tester.widget<OutlinedButton>(lapFinder);
 
         expect(lapButton.onPressed, isNotNull);
       },
     );
 
-    testWidgets(
-      "tapping LAP displays the recorded lap",
-          (WidgetTester tester) async {
+    testWidgets("tapping LAP displays the recorded lap", (WidgetTester tester) async {
         await tester.pumpWidget(
           const MaterialApp(
             home: HomeScreen(),
@@ -347,9 +342,7 @@ void main() {
       },
     );
 
-    testWidgets(
-      "multiple recorded laps are displayed in the lap sheet",
-          (WidgetTester tester) async {
+    testWidgets("multiple recorded laps are displayed in the lap sheet", (WidgetTester tester) async {
         await tester.pumpWidget(
           const MaterialApp(
             home: HomeScreen(),
@@ -401,12 +394,12 @@ void main() {
         await tester.tap(startFinder);
         await tester.pump();
 
-        expect(tester.widget<ElevatedButton>(lapFinder).onPressed,isNotNull);
+        expect(tester.widget<OutlinedButton>(lapFinder).onPressed,isNotNull);
 
         await tester.tap(pauseResumeFinder);
         await tester.pump();
 
-        expect(tester.widget<ElevatedButton>(lapFinder).onPressed,isNull);
+        expect(tester.widget<OutlinedButton>(lapFinder).onPressed,isNull);
       },
     );
 
@@ -439,6 +432,91 @@ void main() {
         expect(find.text('Lap 1'),findsNothing);
 
         expect(find.text('No laps recorded'),findsOneWidget);
+      },
+    );
+  });
+
+  group("Analog Stopwatch Tests", (){
+
+    testWidgets('shows digital display by default', (tester) async {
+        await tester.pumpWidget(
+          const MaterialApp(
+            home: HomeScreen(),
+          ),
+        );
+
+        expect(find.byKey(const Key('digitalStopwatchDisplay')),findsOneWidget);
+
+        expect(find.byKey(const Key('analogStopwatchDisplay')),findsNothing);
+      },
+    );
+
+    testWidgets('switches from digital to analog display and vice versa', (tester) async {
+        await tester.pumpWidget(
+          const MaterialApp(
+            home: HomeScreen(),
+          ),
+        );
+
+        await tester.tap(find.text('ANALOG'));
+        await tester.pump();
+
+        expect(find.byKey(const Key('analogStopwatchDisplay')), findsOneWidget);
+
+        expect(find.byKey(const Key('digitalStopwatchDisplay')), findsNothing);
+
+        await tester.tap(find.text('DIGITAL'));
+        await tester.pump();
+
+        expect(find.byKey(const Key('digitalStopwatchDisplay')), findsOneWidget);
+
+        expect(find.byKey(const Key('analogStopwatchDisplay')), findsNothing);
+      },
+    );
+
+    testWidgets('stopwatch controls remain functional in analog mode', (tester) async {
+        await tester.pumpWidget(
+          const MaterialApp(
+            home: HomeScreen(),
+          ),
+        );
+
+        await tester.tap(find.text('ANALOG'));
+        await tester.pump();
+
+        await tester.tap(find.byKey(const Key('startButton')));
+        await tester.pump();
+
+        expect(find.text('PAUSE'), findsOneWidget);
+
+        await tester.tap(find.byKey(const Key('pauseResumeButton')));
+        await tester.pump();
+
+        expect(find.text('RESUME'), findsOneWidget);
+      },
+    );
+
+    testWidgets('lap can be recorded in analog mode', (tester) async {
+        await tester.pumpWidget(
+          const MaterialApp(
+            home: HomeScreen(),
+          ),
+        );
+
+        await tester.tap(find.text('ANALOG'));
+        await tester.pump();
+
+        await tester.tap(find.byKey(const Key('startButton')));
+        await tester.pump();
+
+        final lapButton = find.byKey(const Key('lapButton'));
+
+        expect(lapButton, findsOneWidget);
+
+        await tester.tap(lapButton);
+        await tester.pump();
+
+        expect(find.text('Lap 1'), findsOneWidget);
       },
     );
   });

@@ -13,6 +13,7 @@ class StopwatchDisplay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      key: const Key('digitalStopwatchDisplay'),
       height: 92,
       padding: const EdgeInsets.all(6),
       decoration: BoxDecoration(
@@ -61,5 +62,4 @@ class StopwatchDisplay extends StatelessWidget {
       ),
     );
   }
-
 }

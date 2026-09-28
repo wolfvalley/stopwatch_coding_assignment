@@ -2,6 +2,13 @@
   <library name="Dart Packages" type="DartPackagesLibraryType">
     <properties>
       <option name="packageNameToDirsMap">
+        <entry key="analog_timer">
+          <value>
+            <list>
+              <option value="$PROJECT_DIR$/../../flutter_pub_cache/hosted/pub.dev/analog_timer-1.0.0/lib" />
+            </list>
+          </value>
+        </entry>
         <entry key="async">
           <value>
             <list>
@@ -197,6 +204,7 @@
       <root url="file://C:/flutter/bin/cache/pkg/sky_engine/lib" />
       <root url="file://C:/flutter/packages/flutter/lib" />
       <root url="file://C:/flutter/packages/flutter_test/lib" />
+      <root url="file://$PROJECT_DIR$/../../flutter_pub_cache/hosted/pub.dev/analog_timer-1.0.0/lib" />
       <root url="file://$PROJECT_DIR$/../../flutter_pub_cache/hosted/pub.dev/async-2.13.1/lib" />
       <root url="file://$PROJECT_DIR$/../../flutter_pub_cache/hosted/pub.dev/boolean_selector-2.1.2/lib" />
       <root url="file://$PROJECT_DIR$/../../flutter_pub_cache/hosted/pub.dev/characters-1.4.1/lib" />
