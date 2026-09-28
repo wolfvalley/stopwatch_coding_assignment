@@ -5,11 +5,21 @@ A simple stopwatch Android application built with the Flutter framework.
 ## Features
 
 - Start, pause, resume, and reset functionality
-- Millisecond-precision elapsed time display
+- Centisecond-precision elapsed time display
+- Digital and analog stopwatch display modes
+- Switchable display mode without interrupting the running stopwatch
+- Analog stopwatch with:
+    - 60-second main dial
+    - 60-minute subdial
+    - Smooth hand movement based on elapsed time
+- Lap recording with lap and split times
+- Draggable lap history panel
+- Clearable lap history
 - Custom stopwatch-inspired Material UI
 - Portrait-only orientation
-- Separation of UI and stopwatch logic
-- Widget tests covering the main interactions and edge cases
+- Separation of UI, presentation state, and stopwatch logic
+- Unit and widget tests covering stopwatch behavior and user interactions
+
 
 ## Technologies
 
@@ -77,22 +87,35 @@ The main source code of the Flutter application is located in the `lib/` directo
 
 ```text
 lib/ 
- |--controllers/ - stopwatch state and business logic
- |-- widgets/    - reusable UI components
- |-- screens/    - application screens
- `-- main.dart   - entry point of the application
+ |-- app          - place of MaterialApp and theme
+ |-- controllers/ - stopwatch state and business logic
+ |-- models/      - data models
+ |-- screens/     - application screens
+ |-- utils/       - utilities
+ |-- widgets/     - reusable UI components
+ `-- main.dart    - entry point of the application
 ```
 
 ## Testing
 
 The project includes widget tests covering the main stopwatch functionality, including:
 
-- Start
-- Pause
-- Resume
-- Reset
-- Disabled button states
+- Start, pause, resume, and reset
 - Stopwatch state transitions
+- Enabled and disabled button states
+- Lap recording and lap time calculations
+- Lap history clearing
+- Digital display as the default mode
+- Switching between digital and analog display modes
+- Stopwatch controls in analog mode
+- Lap recording in analog mode
+
+
+The `StopwatchController` manages the stopwatch state, elapsed time, and lap data independently from the UI.
+
+The digital and analog displays use the same elapsed time source, allowing the user to switch between display modes without affecting the running stopwatch.
+
+## Testing
 
 Run the tests with:
 
